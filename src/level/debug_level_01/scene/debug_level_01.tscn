@@ -42,7 +42,6 @@ use_collision = true
 width = 28.9425
 height = 0.016
 depth = 28.8444
-material = ExtResource( 1 )
 
 [node name="CSGRamp1" type="CSGPolygon" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.494141, 0, 0, 0, 1, 0, 0, 1 )

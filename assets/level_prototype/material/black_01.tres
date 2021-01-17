@@ -4,4 +4,8 @@
 
 [resource]
 albedo_texture = ExtResource( 1 )
+roughness = 0.8
+clearcoat_enabled = true
+clearcoat = 1.0
+clearcoat_gloss = 0.89
 uv1_triplanar = true

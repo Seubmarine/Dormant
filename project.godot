@@ -16,4 +16,7 @@ config/icon="res://assets/icon/icon.png"
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+quality/directional_shadow/size=16384
+quality/shadows/filter_mode=2
+quality/filters/msaa=3
+environment/default_environment="res://assets/environement/default_env.tres"
