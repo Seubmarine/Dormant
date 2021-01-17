@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/level/debug_level_01/scene/debug_level_01.tscn" type="PackedScene" id=1]
+
+[node name="Game" type="Node"]
+
+[node name="DebugLevel01" parent="." instance=ExtResource( 1 )]

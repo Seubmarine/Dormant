@@ -1,0 +1,83 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/level_prototype/material/black_01.tres" type="Material" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+
+[sub_resource type="BoxShape" id=2]
+
+[sub_resource type="Animation" id=3]
+resource_name = "platform1"
+length = 3.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5, 3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 4.65962, 0.16775, 0 ), Vector3( 4.66, 2.373, 0 ), Vector3( 4.65962, 0.16775, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 360, 0 ) ]
+}
+
+[node name="DebugLevel01" type="Spatial"]
+
+[node name="CSGBox" type="CSGBox" parent="."]
+use_collision = true
+width = 28.9425
+height = 0.016
+depth = 28.8444
+material = ExtResource( 1 )
+
+[node name="CSGRamp1" type="CSGPolygon" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.494141, 0, 0, 0, 1, 0, 0, 1 )
+use_collision = true
+polygon = PoolVector2Array( 0, 0, 0, 2, 1, 1, 2, 0 )
+material = ExtResource( 1 )
+
+[node name="CSGRamp2" type="CSGPolygon" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.709368, 0, 0, 0, 1, 0, 0, 2 )
+use_collision = true
+polygon = PoolVector2Array( 0, 0, 0, 2, 1, 1, 2, 0 )
+material = ExtResource( 1 )
+
+[node name="CSGRamp3" type="CSGPolygon" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.927469, 0, 0, 0, 1, 0, 0, 3 )
+use_collision = true
+polygon = PoolVector2Array( 0, 0, 0, 2, 1, 1, 2, 0 )
+material = ExtResource( 1 )
+
+[node name="Camera" type="Camera" parent="CSGRamp3"]
+transform = Transform( -0.881336, -0.171581, 0.440234, 0, 1.0046, 0.391542, -0.472489, 0.320052, -0.82117, 3.04484, 1.98547, -6.07753 )
+
+[node name="MovingPlatform1" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 6.51683e-07, 0, 1, 0, -6.51683e-07, 0, 1, 4.65962, 0.16775, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="MovingPlatform1"]
+transform = Transform( 1, 0, 0, 0, 0.0266154, 0, 0, 0, 1, 0, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="MovingPlatform1"]
+transform = Transform( 1, 0, 0, 0, 0.0266154, 0, 0, 0, 1, 0, 0, 0 )
+shape = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MovingPlatform1"]
+autoplay = "platform1"
+playback_speed = 0.5
+anims/platform1 = SubResource( 3 )
