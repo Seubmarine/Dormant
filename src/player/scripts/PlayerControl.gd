@@ -30,15 +30,19 @@ func turn_mesh(delta: float) -> void:
 		smooth_mesh_orientation = lerp_angle(smooth_mesh_orientation, mesh_orientation, delta * 11)
 	$MeshPivot.set_rotation(Vector3(0,smooth_mesh_orientation,0))
 
-func align_with_y(xform:Transform, new_y:Vector3):
-	#TODO:
-	xform.basis.y = new_y
-	xform.basis.x = -xform.basis.z.cross(new_y)
-	xform.basis = xform.basis.orthonormalized()
-	return xform
+func look_at_with_y(trans:Transform, new_y:Vector3, v_up:Vector3):
+	#Y vector
+	trans.basis.y=new_y.normalized()
+	trans.basis.z=v_up*-1
+	trans.basis.x = trans.basis.z.cross(trans.basis.y).normalized();
+	#Recompute z = y cross X
+	trans.basis.z = trans.basis.y.cross(trans.basis.x).normalized();
+	trans.basis.x = trans.basis.x * -1   # <======= ADDED THIS LINE
+	trans.basis = trans.basis.orthonormalized() # make sure it is valid 
+	return trans
 	
 onready var look_raycast : RayCast = $CameraPivot/SpringArm/LookRayCast
-onready var object_ref := load("res://src/level/debug_level/shared/cube_rigidbody.tscn")
+onready var object_ref := preload("res://src/level/debug_level/shared/cube_rigidbody.tscn")
 func _place_object() -> void:
 	if look_raycast.is_colliding():
 		print('u')
@@ -47,7 +51,7 @@ func _place_object() -> void:
 		var ray_norm = look_raycast.get_collision_normal()
 		get_tree().get_root().add_child(object)
 		object.global_transform.origin = ray_pos
-		object.global_transform = align_with_y(object.global_transform, ray_norm)
+		object.global_transform = look_at_with_y(object.global_transform, ray_norm, $CameraPivot/SpringArm/Camera.global_transform.basis.y)
 
 func _remove_object() -> void:
 	if look_raycast.is_colliding():
