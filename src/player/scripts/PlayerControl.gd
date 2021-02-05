@@ -11,7 +11,9 @@ var snap : Vector3 = -get_floor_normal()
 export var gravity : float = 0.98
 export var speed : float = 15
 export var jumpVelocity : float = 15
-
+func _ready() -> void:
+	$CameraPivot/SpringArm/LookRayCast.connect("removable", self, "_remove_object")
+	$CameraPivot/SpringArm/LookRayCast.connect("placable", self, "_place_object")
 func get_input() -> Vector2:
 	input_direction = Vector2(
 		Input.get_action_strength("move_left") - Input.get_action_strength("move_right"),
@@ -43,26 +45,16 @@ func look_at_with_y(trans:Transform, new_y:Vector3, v_up:Vector3):
 	
 onready var look_raycast : RayCast = $CameraPivot/SpringArm/LookRayCast
 onready var object_ref := preload("res://src/level/debug_level/shared/cube_rigidbody.tscn")
-func _place_object() -> void:
-	if look_raycast.is_colliding():
-		print('u')
-		var object : Spatial = object_ref.instance()
-		var ray_pos = look_raycast.get_collision_point()
-		var ray_norm = look_raycast.get_collision_normal()
-		get_tree().get_root().add_child(object)
-		object.global_transform.origin = ray_pos
-		object.global_transform = look_at_with_y(object.global_transform, ray_norm, $CameraPivot/SpringArm/Camera.global_transform.basis.y)
 
-func _remove_object() -> void:
-	if look_raycast.is_colliding():
-		var shape := look_raycast.get_collider()
-		var object = shape.get_owner()
-		if object == null:
-			object = shape
-		elif object == get_node("/root/Game"):
-			object = shape
-		if object.is_in_group('removable'):
-			object.queue_free()
+func _place_object(ray_pos, ray_norm) -> void:
+	var object : Spatial = object_ref.instance()
+	get_tree().get_root().add_child(object)
+	object.global_transform.origin = ray_pos
+	object.global_transform = look_at_with_y(object.global_transform, ray_norm, $CameraPivot/SpringArm/Camera.global_transform.basis.y)
+		
+func _remove_object(object) -> void:
+	if Input.is_action_just_pressed("remove_object"):
+		object.queue_free()
 		
 func _physics_process(delta: float) -> void:
 	turn_mesh(delta)
@@ -71,10 +63,6 @@ func _physics_process(delta: float) -> void:
 	var snap_vector = get_floor_normal() #if input_direction == Vector2.ZERO else Vector3.DOWN
 	gravity = 0.98
 	
-	if Input.is_action_just_pressed("place_object"):
-		_place_object()
-	if Input.is_action_just_pressed("remove_object"):
-		_remove_object()
 	if Input.is_action_pressed("jump"):
 		snap_vector = Vector3.ZERO
 		velocity.y = jumpVelocity
